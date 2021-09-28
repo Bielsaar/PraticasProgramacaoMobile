@@ -1,5 +1,6 @@
 package com.example.wishlist
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -57,9 +59,23 @@ class MainActivity : AppCompatActivity() {
             position: Int,
             id: Long
         ): Boolean {
-            this@MainActivity.lista.removeAt(position)
-            (this@MainActivity.lvDesejos.adapter as ArrayAdapter<Desejo>).notifyDataSetChanged()
+            //Sofri tentando fazer uma classe pra depois perceber
+            //que o proprio site diz que eu posso usar como eu quero usando como tá ai, jesus
+            val itemRemover = this@MainActivity.lista.get(position)
+            val alerta = AlertDialog.Builder(this@MainActivity)
+            alerta.setTitle("-Deletar item-")
+            alerta.setMessage("Você irá remover ´${itemRemover.descricao}´." +
+                    "\n Você confirma?")
+            alerta.setPositiveButton("Sim", DialogInterface.OnClickListener{
+                dialogo: DialogInterface, x: Int ->
+                    this@MainActivity.lista.removeAt(position)
+                    (this@MainActivity.lvDesejos.adapter as ArrayAdapter<Desejo>).notifyDataSetChanged()
+            })
+            alerta.setNegativeButton("Não", null)
+            alerta.create().show()
             return true
         }
     }
+
+
 }
